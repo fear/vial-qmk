@@ -25,7 +25,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_FN1] = LAYOUT(
         _______, TG(2),   TG(3),   _______, _______, DM_REC1, DM_RSTP, DM_PLY1, _______, _______, KC_NLCK, KC_SLCK, KC_CLCK, _______,          RGB_TOG,
-        RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,RGB_M_SN,RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, _______, _______, _______, RESET,            RGB_HUI,
+        RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,_______, _______, _______, _______, _______, _______, _______, _______, RESET,            RGB_HUI,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   RGB_HUD,
         KC_CAPS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          RGB_SAI,
         _______, _______, _______, _______, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,          _______, RGB_MOD, RGB_SAD,
@@ -99,8 +99,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 for (uint8_t i=0; i < sizeof(LED_LIST_NUMPAD)/sizeof(LED_LIST_NUMPAD[0]); i++) {
                     rgb_matrix_set_color(LED_LIST_NUMPAD[i], RGB_GREEN);
                 }
-                for (uint8_t i=0; i < sizeof(LED_SIDE_RIGHT)/sizeof(LED_SIDE_RIGHT[0]); i++) {
-                    rgb_matrix_set_color(LED_SIDE_RIGHT[i], RGB_GREEN);
+                for (uint8_t i=0; i < sizeof(LED_SIDE)/sizeof(LED_SIDE[0]); i++) {
+                    rgb_matrix_set_color(LED_SIDE[i], RGB_GREEN);
                 }
                 break;
             case _FN1:
@@ -113,11 +113,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 rgb_matrix_set_color(LED_2,    RGB_PURPLE);     // RGB Mode
                 rgb_matrix_set_color(LED_3,    RGB_PURPLE);     // RGB Mode
                 rgb_matrix_set_color(LED_4,    RGB_PURPLE);     // RGB Mode
-                rgb_matrix_set_color(LED_5,    RGB_PURPLE);     // RGB Mode
-                rgb_matrix_set_color(LED_6,    RGB_PURPLE);     // RGB Mode
-                rgb_matrix_set_color(LED_7,    RGB_PURPLE);     // RGB Mode
-                rgb_matrix_set_color(LED_8,    RGB_PURPLE);     // RGB Mode
-                rgb_matrix_set_color(LED_9,    RGB_PURPLE);     // RGB Mode
                 rgb_matrix_set_color(LED_N,    RGB_CYAN);       // NKRO Toggle
                 rgb_matrix_set_color(LED_DEL,  RGB_PURPLE);     // RGB Sat
                 rgb_matrix_set_color(LED_PGUP, RGB_PURPLE);     // RGB Sat
