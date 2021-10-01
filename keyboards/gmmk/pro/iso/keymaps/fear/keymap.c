@@ -86,6 +86,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         switch(get_highest_layer(layer_state)){  // special handling per layer
             case _BASE: // Base Layer
+                for (uint8_t i=0; i < sizeof(LED_SIDE)/sizeof(LED_SIDE[0]); i++) {
+                    rgb_matrix_set_color(LED_SIDE[i], RGB_WHITE);
+                }
                 break;
             case _LOCK: // LockKB Layer
                 for (uint8_t i=0; i < sizeof(LED_SIDE)/sizeof(LED_SIDE[0]); i++) {
