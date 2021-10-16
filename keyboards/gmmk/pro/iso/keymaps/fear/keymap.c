@@ -3,9 +3,11 @@
 
 enum custom_keycodes {
   KC_WLCK = SAFE_RANGE, // Lock GuiKey
+  KC_GLOW,
 };
 
 bool _isWinKeyDisabled = false;
+bool _isUnderglowEnabled = false;
 
 enum custom_layers {
     _BASE = 0,
@@ -16,8 +18,8 @@ enum custom_layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           KC_MUTE,
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_PSCR,
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PSCR,          KC_MUTE,
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_DEL,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,                   KC_PGUP,
         KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS, KC_ENT,           KC_PGDN,
         KC_LSFT, KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
@@ -26,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_FN1] = LAYOUT(
         _______, TG(2),   TG(3),   _______, _______, DM_REC1, DM_RSTP, DM_PLY1, _______, _______, KC_NLCK, KC_SLCK, KC_CLCK, _______,          RGB_TOG,
         RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,_______, _______, _______, _______, _______, _______, _______, _______, RESET,            RGB_HUI,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   RGB_HUD,
+        KC_GLOW, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   RGB_HUD,
         KC_CAPS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          RGB_SAI,
         _______, _______, _______, _______, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,          _______, RGB_MOD, RGB_SAD,
         _______, KC_WLCK, _______,                            _______,                            _______, _______, _______, RGB_SPD, RGB_RMOD,RGB_SPI
@@ -62,6 +64,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             } else  unregister_code16(keycode);
             return false; // Skip all further processing of this key
+        case KC_GLOW:
+            if (record->event.pressed) {
+                _isUnderglowEnabled = !_isUnderglowEnabled; //toggle status
+            } else  unregister_code16(keycode);
+            return false; // Skip all further processing of this key
         default:
             return true; // Process all other keycodes normally
     }
@@ -86,8 +93,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         switch(get_highest_layer(layer_state)){  // special handling per layer
             case _BASE: // Base Layer
-                for (uint8_t i=0; i < sizeof(LED_SIDE)/sizeof(LED_SIDE[0]); i++) {
-                    rgb_matrix_set_color(LED_SIDE[i], RGB_WHITE);
+                if(_isUnderglowEnabled) {
+                    for (uint8_t i=0; i < sizeof(LED_SIDE)/sizeof(LED_SIDE[0]); i++) {
+                        rgb_matrix_set_color(LED_SIDE[i], RGB_WHITE);
+                    }
                 }
                 break;
             case _LOCK: // LockKB Layer
@@ -107,8 +116,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
                 break;
             case _FN1:
-                for (uint8_t i=0; i < sizeof(LED_SIDE_RIGHT)/sizeof(LED_SIDE_RIGHT[0]); i++) {
-                    rgb_matrix_set_color(LED_SIDE_RIGHT[i], RGB_RED);
+                for (uint8_t i=0; i < sizeof(LED_SIDE)/sizeof(LED_SIDE[0]); i++) {
+                    rgb_matrix_set_color(LED_SIDE[i], RGB_RED);
                 }
                 rgb_matrix_set_color(LED_BSPC, RGB_RED);        // RESET
                 rgb_matrix_set_color(LED_GRV,  RGB_PURPLE);     // RGB Mode
